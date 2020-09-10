@@ -1,3 +1,4 @@
 {
-    "mongoURI" : "mongodb+srv://nima:!Azar1342@cluster0.ngr5x.mongodb.net/<dbname>?retryWrites=true&w=majority"
+    "mongoURI" : "mongodb+srv://nima:!Azar1342@cluster0.ngr5x.mongodb.net/<dbname>?retryWrites=true&w=majority",
+    "jwtSecret": "thetokenThatUnlocksAll"
 }

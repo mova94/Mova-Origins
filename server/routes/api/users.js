@@ -1,30 +1,83 @@
 const express = require("express");
-const { check, validationResult } = require("express-validator/check");
+const { check, validationResult } = require("express-validator");
+const gravatar = require('gravatar');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require("config");
 const router = express.Router();
 
+const User = require('../../models/User');
 // @route   POST api/users
 // @desc    register user
 // @access  Public
 router.post(
   "/",
+  //TODO create custom validation for name and password to check for special characters and format
   [
     check("name", "Name is required")
         .not()
         .isEmpty(),
-    check("name", "No Special Characters except for '-'")
-        .isAlpha(),
     check('email', "Please include a valid email")
         .isEmail(),
     check('password', "Please enter a password with at lead 6 characters")
         .isLength({min: 6})
   ],
-  (req, res) => {
+  //Will be using Async-Await for db calls 
+  async (req, res) => {
     console.log(req.body);
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({ errors: errors.array()})
     }
-    res.send("User Route");
+
+    const {name, email, password} = req.body;
+    try {
+      //If user exists
+      let user = await User.findOne({email});
+      if(user){
+        return res.status(400).json({errors: [{msg: 'User Already Exists!'}]})
+      }
+      //Get gravatar
+      const avatar = gravatar.url(email, {
+        s: '200',
+        r: 'pg',
+        d: 'mm'
+      });
+
+      user = new User ({
+        name,
+        email,
+        avatar,
+        password
+      });
+
+      //Encrypt Password
+      const salt = await bcrypt.genSalt(10);
+
+      user.password = await bcrypt.hash(password, salt);
+
+      await user.save(); 
+      //Return JWT
+      const payload = {
+        user : {
+          id: user.id
+        }
+      };
+
+      jwt.sign( 
+        payload,
+        config.get('jwtSecret'),
+        {expiresIn: 360000},
+        (err, token) => {
+          if(err) throw err;
+          res.json({ token });
+        }
+      );
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Server Error');
+    }
   }
 );
 
