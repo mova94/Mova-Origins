@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const User = require('../../models/User');
+const config = require("config");
+const { check, validationResult } = require("express-validator");
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 // @route   GET api/auth
 // @desc    Auth route
@@ -16,4 +20,62 @@ router.get('/', auth, async(req, res) => {
     } 
 });
 
+// @route   POST api/auth
+// @desc    Authenticate user & get token
+// @access  Public
+router.post(
+    "/",
+    //TODO create custom validation for name and password to check for special characters and format
+    [
+      check('email', "Please include a valid email")
+          .isEmail(),
+      check('password', "Password is requried")
+          .exists()
+    ],
+    //Will be using Async-Await for db calls 
+    async (req, res) => {
+      console.log(req.body);
+      const errors = validationResult(req);
+      if(!errors.isEmpty()){
+          return res.status(400).json({ errors: errors.array()})
+      }
+  
+      const {email, password} = req.body;
+      try {
+        //If user does not exists
+        let user = await User.findOne({email});
+        if(!user){
+            return res.status(400).json({errors: [{msg: 'Invalid Credentials'}]})
+        }
+
+        //check credentials match
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if(!isMatch) {
+            return res.status(400).json({errors: [{msg: 'Invalid Credentials'}]})
+        }
+
+        //Return JWT
+        const payload = {
+          user : {
+            id: user.id
+          }
+        };
+        
+        jwt.sign( 
+          payload,
+          config.get('jwtSecret'),
+          {expiresIn: 360000},
+          (err, token) => {
+            if(err) throw err;
+            res.json({ token });
+          }
+        );
+  
+      } catch (error) {
+        console.log(error);
+        res.status(500).send('Server Error');
+      }
+    }
+  );
 module.exports = router;
