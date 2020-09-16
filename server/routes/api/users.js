@@ -12,7 +12,6 @@ const User = require('../../models/User');
 // @access  Public
 router.post(
   "/",
-  //TODO create custom validation for name and password to check for special characters and format
   [
     check("name", "Name is required")
         .not()
@@ -22,9 +21,7 @@ router.post(
     check('password', "Please enter a password with at lead 6 characters")
         .isLength({min: 6})
   ],
-  //Will be using Async-Await for db calls 
   async (req, res) => {
-    console.log(req.body);
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({ errors: errors.array()})
@@ -32,12 +29,11 @@ router.post(
 
     const {name, email, password} = req.body;
     try {
-      //If user exists
       let user = await User.findOne({email});
       if(user){
         return res.status(400).json({errors: [{msg: 'User Already Exists!'}]})
       }
-      //Get gravatar
+
       const avatar = gravatar.url(email, {
         s: '200',
         r: 'pg',
@@ -51,7 +47,6 @@ router.post(
         password
       });
 
-      //Encrypt Password
       const salt = await bcrypt.genSalt(10);
 
       user.password = await bcrypt.hash(password, salt);

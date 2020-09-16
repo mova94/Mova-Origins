@@ -25,14 +25,12 @@ router.get('/', auth, async(req, res) => {
 // @access  Public
 router.post(
     "/",
-    //TODO create custom validation for name and password to check for special characters and format
     [
       check('email', "Please include a valid email")
           .isEmail(),
       check('password', "Password is requried")
           .exists()
     ],
-    //Will be using Async-Await for db calls 
     async (req, res) => {
       console.log(req.body);
       const errors = validationResult(req);
@@ -42,20 +40,17 @@ router.post(
   
       const {email, password} = req.body;
       try {
-        //If user does not exists
         let user = await User.findOne({email});
         if(!user){
             return res.status(400).json({errors: [{msg: 'Invalid Credentials'}]})
         }
 
-        //check credentials match
         const isMatch = await bcrypt.compare(password, user.password);
 
         if(!isMatch) {
             return res.status(400).json({errors: [{msg: 'Invalid Credentials'}]})
         }
 
-        //Return JWT
         const payload = {
           user : {
             id: user.id
