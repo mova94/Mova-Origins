@@ -6,7 +6,7 @@ export const Landing = () => {
         <section className="landing">
         <div className="dark-overlay">
           <div className="landing-inner">
-            <h1 className="x-large">MovaBook</h1>
+            <h1 className="x-large"> Mova Origins </h1>
             <p className="lead">
               Become a memeber of the Mova Family, share posts and see how the community is doing
             </p>
