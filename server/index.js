@@ -19,6 +19,7 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
 
-app.listen(3000, () => {
-    console.log("Listening.....");
+const port = 4000;
+app.listen(port, () => {
+    console.log(`Listening on port: ${port} .....`);
 })
