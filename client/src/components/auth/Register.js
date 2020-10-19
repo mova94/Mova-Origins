@@ -1,7 +1,11 @@
 import React, {useState} from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
+import {connect} from 'react-redux';
+import { setAlert } from './../../actions/alert';
+import PropTypes from 'prop-types';
+import { register } from './../../actions/auth';
 
-export const Register = () => {
+const Register = ({ setAlert, register, isAuthenticated }) => {
 
     const [formData, setFormData] = useState({
         name:'',
@@ -17,12 +21,21 @@ export const Register = () => {
     const onSubmit = async e => {
         e.preventDefault();
         if(password !== password2){
-            console.log('Passwords do not match');
+            setAlert('Passwords do not match', 'danger', 3000);
         } else{
-            console.log('Success')
+            register({
+                name,
+                email,
+                password
+            });
         }
     }
 
+    if(isAuthenticated){
+        return (
+            <Redirect to="/dashboard"/>
+        )
+    }
     return (
         <React.Fragment>
             <h1 className="large text-primary">Sign Up</h1>
@@ -47,10 +60,8 @@ export const Register = () => {
                     onChange={e => onChange(e)}
                     required
                     />
-                <small className="form-text"
-                    >This site uses Gravatar so if you want a profile image, use a
-                    Gravatar email</small
-                >
+                <small className="form-text">This site uses Gravatar so if you want a profile image, use a
+                    Gravatar email</small>
                 </div>
                 <div className="form-group">
                 <input
@@ -80,3 +91,14 @@ export const Register = () => {
         </React.Fragment>
     )
 }
+
+Register.propTypes = {
+    setAlert: PropTypes.func.isRequired,
+    register: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool
+};
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+})
+export default connect(mapStateToProps, { setAlert, register })(Register);

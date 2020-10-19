@@ -1,12 +1,17 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
-export const Landing = () => {
+export const Landing = ({isAuthenticated}) => {
+
+    if(isAuthenticated) return <Redirect to='/dashboard'/>      
+    
     return (
         <section className="landing">
         <div className="dark-overlay">
           <div className="landing-inner">
-            <h1 className="x-large">MovaBook</h1>
+            <h1 className="x-large"> Mova Origins </h1>
             <p className="lead">
               Become a memeber of the Mova Family, share posts and see how the community is doing
             </p>
@@ -19,3 +24,13 @@ export const Landing = () => {
       </section>
     )
 }
+
+Landing.propTypes = {
+  isAuthenticated: PropTypes.bool
+}
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps)(Landing);

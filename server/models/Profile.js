@@ -6,21 +6,89 @@ const ProfileSchema = new mongoose.Schema({
         ref: 'user'
     },
 
-    employment: {
-        type: String
-    },
+    experience: [
+        {
+            title: {
+                type:String,
+                required:true
+            },
+            company: {
+                type:String,
+                required:true
+            },
+            location: {
+                type:String
+            },
+            from: {
+                type:String,
+                required:true
+            },
+            to: {
+                type:String
+            },
+            current:{
+                type: Boolean,
+                default:false
+            },
+            description: {
+                type:String
+            }
+        }
+    ],
 
+    education: [
+        {
+            name: {
+                type:String,
+                required:true
+            },
+            degree: {
+                type:String,
+                required:true
+            },
+            location: {
+                type:String,
+                required:true
+            },
+            from: {
+                type:String,
+                required:true
+            },
+            to: {
+                type:String
+            },
+            current:{
+                type: Boolean,
+                default:false
+            }
+        }
+    ],
+
+    gender:{
+        type:String,
+        required:true
+    },
+    
     bio: {
         type: String
     },
 
-    status: {
+    relationshipStatus: {
+        type: String
+    },
+
+    currentStatus: {
         type: String,
         required: true
     },
 
     location: {
         type: String
+    },
+
+    interests:{
+        type:[String],
+        required:true
     },
 
     social: {
