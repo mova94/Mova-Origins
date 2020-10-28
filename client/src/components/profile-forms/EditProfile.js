@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import { createProfile, getCurrentProfile } from '../../actions/profile';
-import {withRouter} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 
 const EditProfile = ({profile:{profile, loading}, createProfile, getCurrentProfile, history}) => {
 
@@ -80,7 +80,7 @@ const EditProfile = ({profile:{profile, loading}, createProfile, getCurrentProfi
                 <small>* = required field</small>
                 <form className="form" onSubmit={e => handleSubmit(e)}>
                 
-                    <div class="form-group">
+                    <div className="form-group">
                     <select name="currentStatus" value={currentStatus} onChange={e => handleChange(e)}>
                         <option value="0">* Select Professional Status</option>
                         <option value="Developer">Engineer</option>
@@ -169,7 +169,7 @@ const EditProfile = ({profile:{profile, loading}, createProfile, getCurrentProfi
                     </React.Fragment>}
                 
                 <input type="submit" className="btn btn-primary my-1"/>
-                <a className="btn btn-light my-1" href="dashboard.html">Go Back</a>
+                <Link className="btn btn-light my-1" to="/dashboard">Go Back</Link>
             </form>
         </React.Fragment>
     )
