@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { setAlert } from "./alert";
-import { GET_PROFILE, PROFILE_ERROR } from "./types";
+import {UPDATE_PROFILE, GET_PROFILE, PROFILE_ERROR } from "./types";
 
 export const getCurrentProfile = () => async dispatch => {
     try {
@@ -32,7 +32,7 @@ export const createProfile = (formData, history, edit = false) => async dispatch
             payload: res.data
         });
 
-        dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success',3000));
+        dispatch(setAlert(edit ? 'Profile Updated' : 'Profile Created', 'success', 3000));
 
         if(!edit) {
             history.push('/dashboard');
@@ -51,3 +51,69 @@ export const createProfile = (formData, history, edit = false) => async dispatch
         });
     }
 } 
+
+export const addExperience = (formData, history) => async dispatch => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        };
+
+        const res = await axios.put('/api/profile/experience', formData, config);
+
+        dispatch({
+            type:UPDATE_PROFILE,
+            payload: res.data
+        });
+
+        dispatch(setAlert('Experience Added', 'success', 3000));
+        history.push('/dashboard');
+    
+    } catch (err) {
+        const errors = err.response.data.errors;
+        if(errors){
+            errors.forEach(error => {
+                dispatch(setAlert(error.msg, 'danger'))
+            });
+        };
+
+        dispatch({
+            type:PROFILE_ERROR,
+            payload:{ msg: err.response.statusText, status: err.response.status}
+        });
+    }
+}
+
+export const addEducation = (formData, history, edit) => async dispatch => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        };
+
+        const res = await axios.put('/api/profile/education', formData, config);
+
+        dispatch({
+            type:UPDATE_PROFILE,
+            payload: res.data
+        });
+
+        dispatch(setAlert('Education Added', 'success', 3000));
+        history.push('/dashboard');
+        
+    } catch (err) {
+        const errors = err.response.data.errors;
+        if(errors){
+            errors.forEach(error => {
+                dispatch(setAlert(error.msg, 'danger'))
+            });
+        };
+
+        dispatch({
+            type:PROFILE_ERROR,
+            payload:{ msg: err.response.statusText, status: err.response.status}
+        });
+    }
+}
