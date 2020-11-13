@@ -22,7 +22,7 @@ const EditProfile = ({profile:{profile, loading}, createProfile, getCurrentProfi
             instagram:loading || !profile.instagram? '': profile.instagram,
             youtube:loading || !profile.youtube? '': profile.youtube
         })
-    },[loading]);// eslint-disable-line react-hooks/exhaustive-deps
+    },[loading, getCurrentProfile]);// eslint-disable-line react-hooks/exhaustive-deps
 
     const [formData, setFormData] = useState({
         gender:'',

@@ -11,7 +11,7 @@ import Education from './Education'
 const Dashboard = ({getCurrentProfile, deleteAccount, auth:{user}, profile: {profile, loading}}) => {
     useEffect(() => {
         getCurrentProfile();
-    },[]);// eslint-disable-line react-hooks/exhaustive-deps
+    },[getCurrentProfile]);
 
     return loading && profile === null ? <Spinner /> : 
             <React.Fragment>
