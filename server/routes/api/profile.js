@@ -239,13 +239,12 @@ router.delete('/education/:id',[auth],
 //@access Public
 router.get('/user/:user_id', async (req, res) => {
     try {
-
         const profile = await Profile.findOne({ user: req.params.user_id }).populate('user', ['name','avatar']);
 
         if(!profile) {
             res.status(400).json( {msg: "Profile Not Found" });
         }
-        res.json(profiles);
+        res.json(profile);
 
     } catch (error) {
         console.log(error);
