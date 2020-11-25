@@ -16,11 +16,11 @@ const EditProfile = ({profile:{profile, loading}, createProfile, getCurrentProfi
             interests:loading || !profile.interests? '': profile.interests,
             currentStatus:loading || !profile.currentStatus? '': profile.currentStatus,
             location: loading || !profile.location? '': profile.location,
-            twitter:loading || !profile.twitter? '': profile.twitter,
-            facebook:loading || !profile.facebook? '': profile.facebook,
-            linkedin:loading || !profile.linkedin? '': profile.linkedin,
-            instagram:loading || !profile.instagram? '': profile.instagram,
-            youtube:loading || !profile.youtube? '': profile.youtube
+            twitter:loading || !profile.social.twitter? '': profile.social.twitter,
+            facebook:loading || !profile.social.facebook? '': profile.social.facebook,
+            linkedin:loading || !profile.social.linkedin? '': profile.social.linkedin,
+            instagram:loading || !profile.social.instagram? '': profile.social.instagram,
+            youtube:loading || !profile.social.youtube? '': profile.social.youtube
         })
     },[loading, getCurrentProfile]);// eslint-disable-line react-hooks/exhaustive-deps
 
@@ -53,7 +53,6 @@ const EditProfile = ({profile:{profile, loading}, createProfile, getCurrentProfi
         instagram,
         youtube
     } = formData;
-
     const handleChange = (e) => {
         const {name, value} = e.target;
         setFormData({
