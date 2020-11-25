@@ -59,6 +59,7 @@ router.get('/', auth,
 // @access  Private
 router.get('/:id', auth, 
     async (req, res) => {
+        console.log('in backend')
     try {
         const post = await Post.findById(req.params.id);
         if(!post) res.status(404).json({msg: 'Post not found'})
@@ -111,7 +112,7 @@ router.put('/like/:id', auth,
             post.likes.unshift({user: req.user.id})
 
             await post.save();
-
+            console.log(post.likes)
             res.json(post.likes);
         } catch (error) {
             console.log(error.message);
@@ -135,7 +136,7 @@ async (req,res) => {
         post.likes.splice(removeIndex, 1);
 
         await post.save();
-
+        console.log(post.likes)
         res.json(post.likes);
     } catch (error) {
         console.log(error.message);
